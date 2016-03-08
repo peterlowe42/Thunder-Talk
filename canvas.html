@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Canvas Animation</title>
+</head>
+<body>
+ <canvas id="canvas" width="1000" height="600" style= 'background-color: red'>
+   Update your browser. It sucks!!!
+ </canvas>
+ <script type="text/javascript">
+  window.requestAnimFrame = (function(callback) {
+        return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
+        function(callback) {
+          window.setTimeout(callback, 1000 / 60);
+        };
+      })();
+  var canvas = document.getElementById('canvas');
+  var context = canvas.getContext('2d');
+  var WIDTH = 1000
+  var HEIGHT = 600
+
+  function drawCircle(myCircle, context){
+    context.beginPath();
+    context.arc(myCircle.x, myCircle.y, myCircle.radius, 0, 2 * Math.PI, false);
+    context.fillStyle = 'green';
+    context.fill();
+    context.lineWidth = 5;
+    context.strokeStyle = 'black';
+    context.closePath();
+    context.stroke();
+  }
+  myCircle = {
+    x:80,
+    y:80,
+    radius: 70
+  }
+
+  function animate(myCircle, canvas, context, startTime){
+    var time = (new Date()).getTime() - startTime;
+
+    var speed = 200;
+
+    var newX = speed * time / 1000;
+    var newY = speed * time / 1000;
+
+    if (newY < canvas.height - myCircle.radius){
+      myCircle.x = newX
+      myCircle.y = newY
+    }
+    context.clearRect(0, 0, WIDTH, HEIGHT)
+
+    drawCircle(myCircle, context);
+
+    requestAnimFrame(function() {
+        animate(myCircle, canvas, context, startTime);
+    });
+  }
+
+
+
+  setTimeout(function(){
+    var startTime = (new Date()).getTime();
+    animate(myCircle, canvas, context, startTime);
+  }, 1000);
+ </script>
+</body>
+</html>
